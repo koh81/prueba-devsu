@@ -1,0 +1,130 @@
+<div class="product-list-container">
+  <!-- Barra de búsqueda y contador -->
+  <div class="toolbar">
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar..."
+        [value]="terminoBusqueda()"
+        (input)="alBuscar($any($event.target).value)"
+        aria-label="Buscar productos"
+      />
+    </div>
+  </div>
+  @if (estaCargando()) {
+    <div class="table-container">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Nombre del producto</th>
+            <th>Descripción</th>
+            <th>Fecha de liberación</th>
+            <th>Fecha de reestructuración</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="skeleton-container">
+        @for (fila of [1, 2, 3, 4, 5]; track $index) {
+          <div class="skeleton-row">
+            <div class="skeleton-item pulse short"></div>
+            <div class="skeleton-item pulse medium"></div>
+            <div class="skeleton-item pulse long"></div>
+            <div class="skeleton-item pulse short"></div>
+            <div class="skeleton-item pulse short"></div>
+
+            <!-- <div class="skeleton-item pulse short"></div> -->
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="table-container">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Nombre del producto</th>
+            <th>Descripción</th>
+            <th>Fecha de liberación</th>
+            <th>Fecha de reestructuración</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (productosPaginados().length === 0) {
+            <tr>
+              <td colspan="6" class="empty-state">
+                @if (terminoBusqueda()) {
+                  No se encontraron productos que coincidan con "{{ terminoBusqueda() }}"
+                } @else {
+                  No hay productos registrados
+                }
+              </td>
+            </tr>
+          } @else {
+            @for (producto of productosPaginados(); track producto.id) {
+              <tr>
+                <td class="logo-cell">
+                  <img
+                    [src]="'assets/' + producto.logo"
+                    [alt]="producto.name"
+                    class="product-logo"
+                  />
+                </td>
+                <td>{{ producto.name }}</td>
+                <td class="description-cell">{{ producto.description }}</td>
+                <td>{{ producto.date_release | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ producto.date_revision | date: 'dd/MM/yyyy' }}</td>
+                <td class="actions-cell">:::</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <div class="results-count">{{ conteoResultados() }} Resultados</div>
+
+      <div class="pagination-controls">
+        <select
+          class="page-size-select"
+          [value]="tamanoPagina()"
+          (change)="alCambiarTamanoPagina(+$any($event.target).value)"
+          aria-label="Resultados por página"
+        >
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+        </select>
+
+        @if (totalPaginas() > 1) {
+          <div class="pagination">
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="paginaActual() === 1"
+              (click)="alCambiarPagina(paginaActual() - 1)"
+              aria-label="Página anterior"
+            >
+              ←
+            </button>
+            <span class="pagination-info"> {{ paginaActual() }} / {{ totalPaginas() }} </span>
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="paginaActual() === totalPaginas()"
+              (click)="alCambiarPagina(paginaActual() + 1)"
+              aria-label="Página siguiente"
+            >
+              →
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
