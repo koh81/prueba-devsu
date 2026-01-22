@@ -23,6 +23,9 @@ export class ProductList implements OnInit {
   paginaActual = signal(1);
   router = inject(Router);
   menuAbiertoId = signal<string | null>(null);
+  mostrarModalEliminar = signal(false);
+  productoAEliminar = signal<ProductoFinanciero | null>(null);
+  estaEliminando = signal(false);
 
   alternarMenu(id: string, event: Event): void {
     event.stopPropagation();
@@ -128,5 +131,36 @@ export class ProductList implements OnInit {
 
   alEditar(id: string): void {
     this.router.navigate(['/products/edit', id]);
+  }
+
+  alAbrirModalEliminar(producto: ProductoFinanciero): void {
+    this.productoAEliminar.set(producto);
+    this.mostrarModalEliminar.set(true);
+    this.menuAbiertoId.set(null); 
+  }
+
+  alCerrarModal(): void {
+    this.mostrarModalEliminar.set(false);
+    this.productoAEliminar.set(null);
+  }
+
+
+  alConfirmarEliminacion(): void {
+    const producto = this.productoAEliminar();
+    if (!producto || this.estaEliminando()) return;
+
+    this.estaEliminando.set(true);
+    this.servicioProducto.eliminarProducto(producto.id).subscribe({
+      next: () => {
+        // Recargar la lista de productos tras eliminar
+        this.cargarProductos();
+        this.alCerrarModal();
+        this.estaEliminando.set(false);
+      },
+      error: (err) => {
+        alert('Error al eliminar el producto: ' + err);
+        this.estaEliminando.set(false);
+      },
+    });
   }
 }

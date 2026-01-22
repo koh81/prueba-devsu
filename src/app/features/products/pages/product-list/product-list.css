@@ -273,8 +273,78 @@
   background-color: var(--color-background);
 }
 
+.dropdown-item--danger {
+  color: var(--color-error);
+}
+
+.dropdown-item--danger:hover {
+  background-color: var(--color-error-light);
+}
+
 .dropdown-icon {
   font-size: var(--font-size-md);
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  background-color: var(--color-surface);
+  width: 90%;
+  max-width: 450px;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: modalScale 0.2s ease-out;
+}
+
+@keyframes modalScale {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-body {
+  padding: var(--spacing-xl);
+  border-bottom: var(--border-width) solid var(--color-border);
+  text-align: center;
+}
+
+.modal-message {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modal-footer {
+  padding: var(--spacing-md) var(--spacing-xl);
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  background-color: var(--color-background);
+}
+
+.modal-footer .btn {
+  flex: 1;
+  max-width: 150px;
 }
 
 .empty-state {

@@ -96,6 +96,10 @@
                           <span class="dropdown-icon">✏️</span>
                           Editar
                         </button>
+                        <button type="button" class="dropdown-item dropdown-item--danger" (click)="alAbrirModalEliminar(producto)">
+                          <span class="dropdown-icon">🗑️</span>
+                          Eliminar
+                        </button>
                       </div>
                     }
                   </div>
@@ -106,6 +110,32 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Modal de Confirmación de Eliminación (F6 - Diseño D4) -->
+    @if (mostrarModalEliminar()) {
+      <div class="modal-overlay" (click)="alCerrarModal()">
+        <div class="modal-container" (click)="$event.stopPropagation()">
+          <div class="modal-body">
+            <p class="modal-message">
+              ¿Estás seguro de eliminar el producto <strong>{{ productoAEliminar()?.name }}</strong>?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="alCerrarModal()" [disabled]="estaEliminando()">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" (click)="alConfirmarEliminacion()" [disabled]="estaEliminando()">
+              @if (estaEliminando()) {
+                Eliminando...
+              } @else {
+                Confirmar
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
     <div class="table-footer">
       <div class="results-count">{{ conteoResultados() }} Resultados</div>
 

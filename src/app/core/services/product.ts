@@ -54,6 +54,10 @@ export class ProductService {
       .pipe(catchError(this.manejarError));
   }
 
+  eliminarProducto(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.urlApi}/${id}`).pipe(catchError(this.manejarError));
+  }
+
   // Manejo de errores
   private manejarError(error: HttpErrorResponse): Observable<never> {
     let mensajeError = 'Ocurrió un error inesperado en el sistema.';
