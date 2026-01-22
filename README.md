@@ -2,6 +2,10 @@
 
 Este proyecto es una aplicación web desarrollada con **Angular 21** para la gestión de productos financieros. Permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) interactuando con una API REST externa.
 
+## 📝 Desarrollado por
+
+- **Desarrollado por**: Carlos Orozco
+
 ## 🚀 Requisitos Previos
 
 - **Node.js**: Versión 22 o superior recomendable.
