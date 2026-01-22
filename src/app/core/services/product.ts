@@ -21,7 +21,6 @@ export class ProductService {
   private http = inject(HttpClient);
   private urlApi = environment.baseUrl;
 
-  // Metodo para obtener los productos financieros
   getProductos(): Observable<ProductoFinanciero[]> {
     return this.http.get<ResponseProductos>(this.urlApi).pipe(
       map((response) => response.data),
@@ -46,16 +45,22 @@ export class ProductService {
       .pipe(catchError(this.manejarError));
   }
 
-  /**
-   * Manejo de excepciones HTTP.
-   */
+  actualizarProducto(
+    id: string,
+    producto: Omit<CrearProducto, 'id'>,
+  ): Observable<ProductoResponse> {
+    return this.http
+      .put<ProductoResponse>(`${this.urlApi}/${id}`, producto)
+      .pipe(catchError(this.manejarError));
+  }
+
+  // Manejo de errores
   private manejarError(error: HttpErrorResponse): Observable<never> {
     let mensajeError = 'Ocurrió un error inesperado en el sistema.';
 
     if (error.error instanceof ErrorEvent) {
       mensajeError = `Error: ${error.error.message}`;
     } else {
-      // Intentar obtener el mensaje del cuerpo de la respuesta del backend
       if (error.error && typeof error.error === 'object' && error.error.message) {
         mensajeError = error.error.message;
       } else if (typeof error.error === 'string') {

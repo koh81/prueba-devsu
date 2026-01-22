@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, HostListener } from '@angular/core';
 import { ProductService } from '../../../../core/services/product';
 import { ProductoFinanciero } from '../../../../core/models/product.model';
 import { DatePipe } from '@angular/common';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ProductList implements OnInit {
   private servicioProducto = inject(ProductService);
+
   estaCargando = signal(true);
   error = signal<string | null>(null);
   productos = signal<ProductoFinanciero[]>([]);
@@ -21,6 +22,19 @@ export class ProductList implements OnInit {
   tamanoPagina = signal(5);
   paginaActual = signal(1);
   router = inject(Router);
+  menuAbiertoId = signal<string | null>(null);
+
+  alternarMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.menuAbiertoId.update((current) => (current === id ? null : id));
+  }
+
+  @HostListener('document:click')
+  cerrarMenus(): void {
+    if (this.menuAbiertoId()) {
+      this.menuAbiertoId.set(null);
+    }
+  }
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -69,12 +83,10 @@ export class ProductList implements OnInit {
     return filtrados.slice(inicio, inicio + tamano);
   });
 
-  // Total de páginas
   totalPaginas = computed(() => {
     return Math.ceil(this.productosFiltrados().length / this.tamanoPagina());
   });
 
-  // Contador de resultados
   conteoResultados = computed(() => {
     return this.productosFiltrados().length;
   });
@@ -112,5 +124,9 @@ export class ProductList implements OnInit {
         productos.map((p) => (p.id === producto.id ? { ...p, logo: provisional } : p)),
       );
     }
+  }
+
+  alEditar(id: string): void {
+    this.router.navigate(['/products/edit', id]);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Observable, of, timer } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import {
@@ -31,6 +31,7 @@ export class ProductForm {
   estaEnviando = signal(false);
   error = signal<string | null>(null);
   mensajeExito = signal<string | null>(null);
+  esModoEdicion = signal(false);
 
   formulario: FormGroup = this.fb.group({
     id: [
@@ -57,6 +58,41 @@ export class ProductForm {
 
         this.formulario.get('date_revision')?.setValue(`${y}-${m}-${d}`);
       }
+    });
+  }
+
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.esModoEdicion.set(true);
+      this.cargarProductoParaEditar(id);
+    }
+  }
+
+  private cargarProductoParaEditar(id: string): void {
+    this.estaCargando.set(true);
+    this.servicioProducto.getProductos().subscribe({
+      next: (productos) => {
+        const producto = productos.find((p) => p.id === id);
+        if (producto) {
+          this.formulario.patchValue({
+            id: producto.id,
+            name: producto.name,
+            description: producto.description,
+            logo: producto.logo,
+            date_release: producto.date_release.split('T')[0],
+            date_revision: producto.date_revision.split('T')[0],
+          });
+          this.formulario.get('id')?.disable();
+        } else {
+          this.error.set('Producto no encontrado');
+        }
+        this.estaCargando.set(false);
+      },
+      error: (err) => {
+        this.error.set('Error al cargar datos del producto');
+        this.estaCargando.set(false);
+      },
     });
   }
 
@@ -128,7 +164,7 @@ export class ProductForm {
 
     const valorFormulario = this.formulario.getRawValue();
 
-    const datosCreacion: CrearProducto = {
+    const datosProducto: CrearProducto = {
       id: valorFormulario.id,
       name: valorFormulario.name,
       description: valorFormulario.description,
@@ -137,21 +173,41 @@ export class ProductForm {
       date_revision: valorFormulario.date_revision,
     };
 
-    this.servicioProducto.crearProducto(datosCreacion).subscribe({
-      next: () => {
-        this.mensajeExito.set('Producto creado exitosamente');
-        this.estaEnviando.set(false);
-        setTimeout(() => this.router.navigate(['/products']), 1500);
-      },
-      error: (err: any) => {
-        this.error.set(err);
-        this.estaEnviando.set(false);
-      },
-    });
+    if (this.esModoEdicion()) {
+      this.servicioProducto.actualizarProducto(valorFormulario.id, datosProducto).subscribe({
+        next: () => {
+          this.mensajeExito.set('Producto actualizado exitosamente');
+          this.estaEnviando.set(false);
+          setTimeout(() => this.router.navigate(['/products']), 1500);
+        },
+        error: (err: any) => {
+          this.error.set(err);
+          this.estaEnviando.set(false);
+        },
+      });
+    } else {
+      this.servicioProducto.crearProducto(datosProducto).subscribe({
+        next: () => {
+          this.mensajeExito.set('Producto creado exitosamente');
+          this.estaEnviando.set(false);
+          setTimeout(() => this.router.navigate(['/products']), 1500);
+        },
+        error: (err: any) => {
+          this.error.set(err);
+          this.estaEnviando.set(false);
+        },
+      });
+    }
   }
 
   alReiniciar(): void {
-    this.formulario.reset();
+    if (this.esModoEdicion()) {
+      const currentId = this.formulario.get('id')?.value;
+      this.formulario.reset({ id: currentId });
+      this.formulario.get('id')?.disable();
+    } else {
+      this.formulario.reset();
+    }
     this.error.set(null);
     this.mensajeExito.set(null);
   }

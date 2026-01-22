@@ -1,5 +1,5 @@
 <div class="product-list-container">
-  <!-- Barra de búsqueda y contador -->
+  <!-- Barra de búsqueda -->
   <div class="toolbar">
     <div class="search-container">
       <input
@@ -80,7 +80,26 @@
                 <td class="description-cell">{{ producto.description }}</td>
                 <td>{{ producto.date_release | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ producto.date_revision | date: 'dd/MM/yyyy' }}</td>
-                <td class="actions-cell">:::</td>
+                <td class="actions-cell">
+                  <div class="context-menu-container">
+                    <button
+                      type="button"
+                      class="btn-icon"
+                      (click)="alternarMenu(producto.id, $event)"
+                      aria-label="Más opciones"
+                    >
+                      ⋮
+                    </button>
+                    @if (menuAbiertoId() === producto.id) {
+                      <div class="dropdown-menu">
+                        <button type="button" class="dropdown-item" (click)="alEditar(producto.id)">
+                          <span class="dropdown-icon">✏️</span>
+                          Editar
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </td>
               </tr>
             }
           }

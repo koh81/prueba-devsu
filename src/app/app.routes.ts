@@ -17,6 +17,11 @@ export const routes: Routes = [
       import('./features/products/pages/product-form/product-form').then((m) => m.ProductForm),
   },
   {
+    path: 'products/edit/:id',
+    loadComponent: () =>
+      import('./features/products/pages/product-form/product-form').then((m) => m.ProductForm),
+  },
+  {
     path: '**',
     redirectTo: 'products',
   },
