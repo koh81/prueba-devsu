@@ -50,20 +50,6 @@ La aplicación incluye las siguientes características:
   - `ProductForm`: Componente reactivo para creación y edición.
 - **Shared**: Componentes visuales reutilizables (Header, Diálogos).
 
-## 🧪 Pruebas Unitarias
-
-El proyecto utiliza **Vitest** como motor de pruebas para una ejecución rápida y moderna.
-
-- Para ejecutar las pruebas:
-  ```bash
-  npm test
-  ```
-- Para ver el reporte de cobertura:
-  ```bash
-  npm run test:coverage
-  ```
-
-Las pruebas cubren validaciones de formulario, lógica de filtrado de señales y manejo de errores en los servicios.
 
 ---
 
