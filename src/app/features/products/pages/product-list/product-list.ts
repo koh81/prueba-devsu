@@ -3,6 +3,7 @@ import { ProductService } from '../../../../core/services/product';
 import { ProductoFinanciero } from '../../../../core/models/product.model';
 import { DatePipe } from '@angular/common';
 import { delay } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -19,6 +20,7 @@ export class ProductList implements OnInit {
   terminoBusqueda = signal('');
   tamanoPagina = signal(5);
   paginaActual = signal(1);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -89,5 +91,26 @@ export class ProductList implements OnInit {
 
   alCambiarPagina(pagina: number): void {
     this.paginaActual.set(pagina);
+  }
+
+  alAgregarProducto(): void {
+    this.router.navigate(['/products/new']);
+  }
+
+  obtenerUrlLogo(logo: string): string {
+    if (!logo) return 'assets/placeholder-logo.png';
+    if (logo.startsWith('http') || logo.startsWith('assets/') || logo.startsWith('/assets/')) {
+      return logo;
+    }
+    return `assets/${logo}`;
+  }
+
+  alErrorImagen(producto: ProductoFinanciero): void {
+    const provisional = 'assets/placeholder-logo.png';
+    if (producto.logo !== provisional) {
+      this.productos.update((productos) =>
+        productos.map((p) => (p.id === producto.id ? { ...p, logo: provisional } : p)),
+      );
+    }
   }
 }

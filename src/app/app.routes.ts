@@ -12,6 +12,11 @@ export const routes: Routes = [
       import('./features/products/pages/product-list/product-list').then((m) => m.ProductList),
   },
   {
+    path: 'products/new',
+    loadComponent: () =>
+      import('./features/products/pages/product-form/product-form').then((m) => m.ProductForm),
+  },
+  {
     path: '**',
     redirectTo: 'products',
   },

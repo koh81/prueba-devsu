@@ -11,6 +11,8 @@
         aria-label="Buscar productos"
       />
     </div>
+
+    <button type="button" class="btn btn-primary" (click)="alAgregarProducto()">Agregar</button>
   </div>
   @if (estaCargando()) {
     <div class="table-container">
@@ -35,8 +37,6 @@
             <div class="skeleton-item pulse long"></div>
             <div class="skeleton-item pulse short"></div>
             <div class="skeleton-item pulse short"></div>
-
-            <!-- <div class="skeleton-item pulse short"></div> -->
           </div>
         }
       </div>
@@ -70,9 +70,10 @@
               <tr>
                 <td class="logo-cell">
                   <img
-                    [src]="'assets/' + producto.logo"
+                    [src]="obtenerUrlLogo(producto.logo)"
                     [alt]="producto.name"
                     class="product-logo"
+                    (error)="alErrorImagen(producto)"
                   />
                 </td>
                 <td>{{ producto.name }}</td>
