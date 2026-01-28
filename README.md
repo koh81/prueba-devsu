@@ -27,7 +27,7 @@ Este proyecto es una aplicación web desarrollada con **Angular 21** para la ges
 
 - `npm start`: Inicia el servidor de desarrollo en `http://localhost:4200/`.
 - `npm run build`: Compila la aplicación para producción en la carpeta `dist/`.
-- `npm test`: Ejecuta las pruebas unitarias utilizando **Vitest**.
+- `npm test`: Ejecuta las pruebas unitarias utilizando **Jest**.
 
 ## ✨ Funcionalidades Implementadas
 
