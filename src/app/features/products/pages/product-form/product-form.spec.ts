@@ -56,8 +56,8 @@ describe('ProductForm', () => {
   });
 
   it('should update revision date when release date changes', () => {
-    component.formulario.get('date_release')?.setValue('2024-01-15');
-    expect(component.formulario.get('date_revision')?.value).toBe('2025-01-15');
+    component.formulario.get('date_release')?.setValue('2027-01-15');
+    expect(component.formulario.get('date_revision')?.value).toBe('2028-01-15');
   });
 
   it('should flag past release dates as invalid', () => {
@@ -88,8 +88,8 @@ describe('ProductForm', () => {
       name: 'Producto nuevo',
       description: 'Descripcion del producto nuevo',
       logo: 'logo.png',
-      date_release: '2024-02-01',
-      date_revision: '2025-02-01',
+      date_release: '2027-02-01',
+      date_revision: '2028-02-01',
     };
 
     productService.verificarIdentificador.mockReturnValue(of(false));
@@ -112,8 +112,8 @@ describe('ProductForm', () => {
       name: 'Producto editado',
       description: 'Descripcion editada',
       logo: 'logo.png',
-      date_release: '2024-03-01',
-      date_revision: '2025-03-01',
+      date_release: '2027-03-01',
+      date_revision: '2028-03-01',
     };
 
     productService.verificarIdentificador.mockReturnValue(of(false));

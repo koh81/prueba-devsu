@@ -4,9 +4,7 @@ module.exports = {
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
   testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'html', 'js'],
-  transform: {
-    '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
-  },
+
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/main.ts',

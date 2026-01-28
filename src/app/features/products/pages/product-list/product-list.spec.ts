@@ -32,7 +32,7 @@ describe('ProductList', () => {
 
   beforeEach(async () => {
     productService = {
-      getProductos: jest.fn(),
+      getProductos: jest.fn().mockReturnValue(of([])),
       eliminarProducto: jest.fn(),
       verificarIdentificador: jest.fn(),
       crearProducto: jest.fn(),

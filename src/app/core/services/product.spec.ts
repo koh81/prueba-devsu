@@ -93,4 +93,56 @@ describe('ProductService', () => {
     expect(req.request.body).toEqual(nuevoProducto);
     req.flush(response);
   });
+  it('should handle server error (500)', (done) => {
+    service.getProductos().subscribe({
+      next: () => done.fail('Expected an error'),
+      error: (mensaje) => {
+        expect(mensaje).toBe('Error interno del servidor. Intente más tarde.');
+        done();
+      },
+    });
+
+    const req = httpMock.expectOne(baseUrl);
+    req.flush({}, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should handle connection error (0)', (done) => {
+    service.getProductos().subscribe({
+      next: () => done.fail('Expected an error'),
+      error: (mensaje) => {
+        expect(mensaje).toBe('No se pudo conectar con el servidor.');
+        done();
+      },
+    });
+
+    const req = httpMock.expectOne(baseUrl);
+    req.flush({}, { status: 0, statusText: 'Connection Error' });
+  });
+
+  it('should handle unknown error with default message', (done) => {
+    service.getProductos().subscribe({
+      next: () => done.fail('Expected an error'),
+      error: (mensaje) => {
+        expect(mensaje).toContain('Código de error: 403');
+        done();
+      },
+    });
+
+    const req = httpMock.expectOne(baseUrl);
+    req.flush({}, { status: 403, statusText: 'Forbidden' });
+  });
+
+  it('should handle error with error object message', (done) => {
+    const errorMsg = 'Custom error message';
+    service.getProductos().subscribe({
+      next: () => done.fail('Expected an error'),
+      error: (mensaje) => {
+        expect(mensaje).toBe(errorMsg);
+        done();
+      },
+    });
+
+    const req = httpMock.expectOne(baseUrl);
+    req.flush({ message: errorMsg }, { status: 400, statusText: 'Bad Request' });
+  });
 });
